@@ -1,7 +1,7 @@
 clear; clc; close all; format long;
 
 % Define the three starting points
-start_points = [0, 0; -1, -1; 1, 1];
+start_points = [0, 0; 1, 1; -1, -1];
 colors = ['r', 'b', 'm']; % Red, Blue, Magenta lines for the 3 paths
 path_names = {}; % To store legend entries
 
@@ -22,9 +22,6 @@ ylabel('y');
 title('Steepest Descent: Comparison of Starting Points');
 hold on;
 
-
-
-
 % --- Figure 2: Convergence Plot (ΝΕΟ) ---
 figure(2);
 hold on;
@@ -32,9 +29,6 @@ title('Convergence of Function Value vs Iterations');
 xlabel('Iterations (k)');
 ylabel('Objective Function Value f(x_k, y_k)');
 grid on;
-
-
-
 
 % Loop through each starting point
 for i = 1:size(start_points, 1)
@@ -44,7 +38,7 @@ for i = 1:size(start_points, 1)
     fprintf('--------------------------------------------------\n');
     fprintf('Running Optimization for Starting Point: (%g, %g)\n', x1, y1);
     
-    [x_hist, y_hist, f_hist, k, x_min, y_min, f_min] = steepest_descent_b(x1, y1, e, @f, @grad_f);
+    [x_hist, y_hist, f_hist, k, fun_calls, grad_calls, x_min, y_min, f_min] = steepest_descent_b(x1, y1, e, @f, @grad_f);
     
     disp('Minimum found at (x, y):');
     disp([x_min, y_min]);
@@ -52,12 +46,12 @@ for i = 1:size(start_points, 1)
     disp(f_min);
     disp('Total Iterations:');
     disp(k);
-
-
-
+    disp('Total Function calls:');
+    disp(fun_calls);
+    disp('Total Gradient calls:');
+    disp(grad_calls);
     
-    
-% --- Plot στο Figure 1 (Contour - Τροχιά) ---
+    % --- Plot στο Figure 1 (Contour - Τροχιά) ---
     figure(1); 
     c = colors(i);
     plot(x_hist, y_hist, [c '-o'], 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', c);
@@ -69,7 +63,7 @@ for i = 1:size(start_points, 1)
     % --- Plot στο Figure 2 (Convergence - Σύγκλιση) ---
     figure(2);
     % Plotaroume to f_hist. O aksonas x einai 0 ews k
-    plot(0:k-1, f_hist, [c '-o'], 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', c);
+    plot(1:k, f_hist, [c '-o'], 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', c);
 end
 
 % Προσθήκη λεζάντας και στα δύο διαγράμματα

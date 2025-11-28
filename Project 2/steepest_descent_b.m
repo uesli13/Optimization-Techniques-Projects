@@ -1,4 +1,4 @@
-function [x_hist, y_hist, f_val_hist, k, x_min, y_min, f_min] = steepest_descent_b(x1,y1, e, f, grad_f)
+function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, x_min, y_min, f_min] = steepest_descent_b(x1,y1, e, f, grad_f)
 
     x = [];
     y = [];
@@ -9,15 +9,17 @@ function [x_hist, y_hist, f_val_hist, k, x_min, y_min, f_min] = steepest_descent
     x(1) = x1;
     y(1) = y1;
     f_val_hist(1) = f(x1, y1);
+    fun_calls = 1;    
+
     grad(1,:) = grad_f(x(1),y(1));
+    grad_calls = 1;
 
     k = 1;
+    max_iter = 10000;
 
     a1=0;
-    b1=4;
+    b1=6;
     l=0.001;
-
-    max_iter = 10000;
 
     while norm(grad(k,:)) >= e && k < max_iter
     
@@ -25,15 +27,19 @@ function [x_hist, y_hist, f_val_hist, k, x_min, y_min, f_min] = steepest_descent
 
         fun = @(gamma) f( x(k) + gamma*d(k,1) ,y(k) + gamma*d(k,2) );
 
-        [~, ~, ~, gamma, ~, ~, ~, ~] = golden_section_search(fun, a1, b1, l);
+        [~, ~, f_gamma, gamma, ~, gold_calls, ~, ~] = golden_section_search(fun, a1, b1, l);
+
+        fun_calls = fun_calls + gold_calls;
 
         x(k+1) = x(k) + gamma*d(k,1);
         y(k+1) = y(k) + gamma*d(k,2);
 
-        f_val_hist(k+1) = f(x(k+1), y(k+1));
+        f_val_hist(k+1) = f_gamma;
 
         k = k+1;
         grad(k,:) = grad_f(x(k), y(k));
+
+        grad_calls = grad_calls + 1;
     end
 
     if k == max_iter
