@@ -1,26 +1,29 @@
 function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, hess_calls, x_min, y_min, f_min] = levenberg_marquardt_b(x1,y1, e, f, grad_f, hessian_f)
-
+    
+    % Matrices to keep track of the values for every iteration
     x = [];
     y = [];
     f_val_hist = [];
     grad = [];
     d = [];
-
+    
+    % Initial values
     x(1) = x1;
     y(1) = y1;
     f_val_hist(1) = f(x1, y1);
-    fun_calls =1;
+    fun_calls =1;       %Computational cost of calculating f
 
     grad(1,:) = grad_f(x(1),y(1));
-    grad_calls =1;
-
+    grad_calls =1;      %Computational cost of calculating the gradient of f
+    
+    % Parametres for golden section search    
     a1=0;
     b1=3;
     l=0.001;
 
     k = 1;
     max_iter = 10000;
-    hess_calls =0;
+    hess_calls =0;      %Computational cost of calculating the hessian matrix of f
 
     while norm(grad(k,:)) >= e && k < max_iter
 
@@ -29,6 +32,8 @@ function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, hess_calls, x_mi
 
         eig_H = eig(H);
         lamda_min =  min(eig_H);
+
+        % Check if H is positive definite and make it if not
 
         if lamda_min > 0
             mk = 0;

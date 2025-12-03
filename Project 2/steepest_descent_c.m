@@ -1,22 +1,25 @@
 function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, x_min, y_min, f_min] = steepest_descent_c(x1,y1, e, f, grad_f)
-
+    
+    % Matrices to keep track of the values for every iteration
     x = [];
     y = [];
     f_val_hist = [];
     grad = [];
     d = [];
-
+    
+    % Initial values
     x(1) = x1;
     y(1) = y1;
     f_val_hist(1) = f(x1, y1);
-    fun_calls = 1;
+    fun_calls = 1;      %Computational cost of calculating f
 
     grad(1,:) = grad_f(x(1),y(1));
-    grad_calls = 1;
+    grad_calls = 1;     %Computational cost of calculating the gradient of f
 
     k = 1;
     max_iter = 10000;
-
+    
+    % Armijo rule parametres
     alpha = 1e-3;
     beta = 0.5;
     s = 1;
@@ -25,16 +28,10 @@ function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, x_min, y_min, f_
     
         d(k,:) = -grad(k,:);
         
-
-        % Current function value
         f_curr = f_val_hist(k);
-        
-        % Dot product: d^T * gradient
-        % Since our vectors are row vectors, we do d * grad'
         
         d_dot_grad = d(k,:) * grad(k,:)'; 
 
-        % --- Find smallest non-negative integer mk ---
         mk = 0;
         gamma = s * (beta^mk);
         
@@ -44,11 +41,8 @@ function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, x_min, y_min, f_
         
         f_next = f(x_next, y_next);
         fun_calls = fun_calls + 1;
-
-        % Check the Book's Condition:
-        % f(xk) - f(xk+1) >= -alpha * gamma * (d^T * gradient)
-        % We loop while the condition is NOT satisfied ( < instead of >= )
         
+        % Armijo rule
         while (f_curr - f_next) < (-alpha * gamma * d_dot_grad)
             
             mk = mk + 1;

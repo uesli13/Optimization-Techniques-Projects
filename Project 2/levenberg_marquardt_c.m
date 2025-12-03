@@ -1,26 +1,29 @@
 function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, hess_calls, x_min, y_min, f_min] = levenberg_marquardt_c(x1,y1, e, f, grad_f, hessian_f)
-
+    
+    % Matrices to keep track of the values for every iteration
     x = [];
     y = [];
     f_val_hist = [];
     grad = [];
     d = [];
 
+    % Initial values
     x(1) = x1;
     y(1) = y1;
     f_val_hist(1) = f(x1, y1);
-    fun_calls =1;
+    fun_calls =1;       %Computational cost of calculating f
 
     grad(1,:) = grad_f(x(1),y(1));
-    grad_calls = 1;
-
+    grad_calls = 1;     %Computational cost of calculating the gradient of f
+    
+    % Armijo rule parametres
     alpha = 1e-3;
     beta = 0.5;
     s = 1;
     
     k = 1;
     max_iter = 10000;
-    hess_calls=0;
+    hess_calls=0;       %Computational cost of calculating the hessian matrix of f
 
     while norm(grad(k,:)) >= e && k < max_iter
 
@@ -29,6 +32,8 @@ function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, hess_calls, x_mi
 
         eig_H = eig(H);
         lamda_min =  min(eig_H);
+
+        % Check if H is positive definite and make it if not
 
         if lamda_min > 0
             mk = 0;
@@ -39,28 +44,21 @@ function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, hess_calls, x_mi
         d_vec = - (H + mk*eye(2)) \ grad(k,:)';
         d(k,:) = d_vec';
 
-        % Current function value
         f_curr = f_val_hist(k);
-        
-        % Dot product: d^T * gradient
-        % Since our vectors are row vectors, we do d * grad'
         
         d_dot_grad = d(k,:) * grad(k,:)'; 
 
-        % --- Find smallest non-negative integer mk ---
         mk = 0;
         gamma = s * (beta^mk);
 
+        % Calculate candidate point
         x_next = x(k) + gamma * d(k,1);
         y_next = y(k) + gamma * d(k,2);
 
         f_next = f(x_next, y_next);
         fun_calls = fun_calls + 1;
-
-        % Check the Book's Condition:
-        % f(xk) - f(xk+1) >= -alpha * gamma * (d^T * gradient)
-        % We loop while the condition is NOT satisfied ( < instead of >= )
         
+        % Armijo rule
         while (f_curr - f_next) < (-alpha * gamma * d_dot_grad)
             
             mk = mk + 1;

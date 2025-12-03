@@ -22,7 +22,6 @@ ylabel('y');
 title('Steepest Descent: Comparison of Starting Points');
 hold on;
 
-% --- Figure 2: Convergence Plot ---
 figure(2);
 hold on;
 title('Convergence of Function Value vs Iterations');
@@ -51,26 +50,17 @@ for i = 1:size(start_points, 1)
     disp('Total Gradient calls:');
     disp(grad_calls);
 
-    % --- Plot στο Figure 1 (Contour - Τροχιά) ---
     figure(1); 
     c = colors(i);
-    plot(x_hist, y_hist, [c '-o'], 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', c);
+    p(i) = plot(x_hist, y_hist, [c '-o'], 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', c);
     plot(x1, y1, 'wd', 'MarkerSize', 8, 'MarkerFaceColor', 'w');
     plot(x_min, y_min, 'y*', 'MarkerSize', 12, 'LineWidth', 2);
     path_names{end+1} = sprintf('Start (%g, %g)', x1, y1);
 
-    % --- Plot στο Figure 2 (Convergence - Σύγκλιση) ---
     figure(2);
-    % Plotaroume to f_hist. O aksonas x einai 0 ews k
-    plot(1:k, f_hist, [c '-o'], 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', c);
-
+    p2(i) = plot(1:k, f_hist, [c '-o'], 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', c);
 end
 
-% Create a custom legend just for the colored paths (ignoring the start/end markers to keep it clean)
-% We need to find the line objects we just plotted. 
-% A simple way is to just add the legend generally, but this targets the colored lines:
-legend(path_names, 'Location', 'best');
-
+figure(1); legend(p, path_names, 'Location', 'best'); hold off;
+figure(2); legend(p2, path_names, 'Location', 'best'); hold off;
 hold off;
-
-
