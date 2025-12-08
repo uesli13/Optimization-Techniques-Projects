@@ -1,3 +1,3 @@
-function [z] = f(x,y)
-    z = (1/3).*x.^2 +3.*y.^2;
+function [z] = f(x1,x2)
+    z = (1/3).*x1.^2 +3.*x2.^2;
 end

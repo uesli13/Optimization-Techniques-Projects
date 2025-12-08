@@ -33,12 +33,12 @@ grid on;
 for i = 1:size(start_points, 1)
     x1 = start_points(i, 1);
     y1 = start_points(i, 2);
-    
+
     fprintf('--------------------------------------------------\n');
     fprintf('Running Optimization for Starting Point: (%g, %g)\n', x1, y1);
-    
+
     [x_hist, y_hist, f_hist, k, fun_calls, grad_calls, hess_calls, x_min, y_min, f_min] = levenberg_marquardt_a(x1, y1, gamma, e, @f, @grad_f, @hessian_f);
-    
+
     disp('Minimum found at (x, y):');
     disp([x_min, y_min]);
     disp('Function value f_min:');
@@ -51,8 +51,8 @@ for i = 1:size(start_points, 1)
     disp(grad_calls);
     disp('Total Hessian calls:');
     disp(hess_calls);
-    
-    figure(1); 
+
+    figure(1);
     c = colors(i);
     p(i) = plot(x_hist, y_hist, [c '-o'], 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', c);
     plot(x1, y1, 'wd', 'MarkerSize', 8, 'MarkerFaceColor', 'w');

@@ -1,0 +1,51 @@
+clear; clc; close all; format long;
+
+e = 0.01;
+gamma = 0.1;
+s = 15;
+x_start  = [-5,10];
+
+x_range = linspace(-10, 10, 100);
+y_range = linspace(-10, 10, 100);
+[X, Y] = meshgrid(x_range, y_range);
+Z = f(X, Y);
+figure(1); 
+contourf(X, Y, Z, 50);
+colorbar;
+xlabel('x');
+ylabel('y');
+title('Stesfdfasdfasdf gamsdvxfvfdvzmas');
+hold on;
+
+
+figure(2);
+hold on;
+title('Convergence of Function Value vs Iterations');
+xlabel('Iterations (k)');
+ylabel('Objective Function Value f(x_k, y_k)');
+grid on;
+
+
+
+[x_hist, f_val_hist, k, fun_calls, grad_calls, x_min, f_min] = steepest_descent_proj(s, gamma, x_start, e, @f, @grad_f);
+
+disp('Minimum found at (x_1, x_2):');
+disp(x_min);
+disp('Function value f_min:');
+disp(f_min);
+disp('Total Iterations:');
+disp(k);
+disp('Total Function calls:');
+disp(fun_calls);
+disp('Total Gradient calls:');
+disp(grad_calls);
+
+figure(1);
+plot(x_hist(:,1), x_hist(:,2), 'r-o', 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', 'red');
+plot(x_start(1), x_start(2), 'wd', 'MarkerSize', 8, 'MarkerFaceColor', 'w');
+plot(x_min(1), x_min(2), 'y*', 'MarkerSize', 12, 'LineWidth', 2);
+
+
+fprintf("size(f_val_hist):(%g %g)\n", size(f_val_hist(:)));
+figure(2);
+plot(1:k, f_val_hist, 'r-o', 'LineWidth', 1.5, 'MarkerSize', 4, 'MarkerFaceColor', 'r');
