@@ -3,28 +3,35 @@ function [x_hist, f_val_hist, k, fun_calls, grad_calls, x_min, f_min] = steepest
     max_iter = 10000;
     x = zeros(max_iter, length(x_start));
     f_val_hist = zeros(max_iter,1);
-    
+
     % Initial values
     x(1,:) = x_start;
     f_val_hist(1) = f(x(1,1), x(1,2));
     fun_calls = 1;      %Computational cost of calculating f
     
-    grad_calls  = 0;
+    grad_calls  = 0;    %Computational cost of calculating grad_f
     k = 1;
     
     keeplooping = true; 
+
+    x_out_times = 0;    % How many times the new x was out of bounds
 
     while keeplooping && k < max_iter
         
         grad = grad_f(x(k,1), x(k,2));
         grad_calls = grad_calls + 1;
 
-        x_bar = proj_x(x(k,:) - s*grad);
+        [x_bar, x_was_out] = proj_x(x(k,:) - s*grad);
+
+        if x_was_out
+            x_out_times = x_out_times + 1;
+        end
 
         x(k+1,:) = x(k,:) + gamma*(x_bar - x(k,:));
 
         f_val_hist(k+1) = f( x(k+1,1), x(k+1,2) );
-        fun_calls = fun_calls + 1;
+        %I don't count the calls of f as computational cost because it's
+        %not contributing to the algorithm, it's only for the visualization
 
         if norm( x(k+1,:) - x(k,:) ) < e
             keeplooping = false;
@@ -45,4 +52,6 @@ function [x_hist, f_val_hist, k, fun_calls, grad_calls, x_min, f_min] = steepest
 
     x_min = x(last_arg,:);
     f_min = f_val_hist(last_arg);
+
+    fprintf("x was out %g times\n", x_out_times);
 end

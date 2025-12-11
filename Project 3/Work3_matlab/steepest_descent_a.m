@@ -30,6 +30,12 @@ function [x_hist, y_hist, f_val_hist, k, fun_calls, grad_calls, x_min, y_min, f_
         % I don't count this as computational cost because it's not used
         % for the algorithm, but only for it's visualization
 
+        if isnan(f_val_hist(k+1)) || f_val_hist(k+1) == inf
+            disp("f = ");
+            disp(f_val_hist(k+1));
+            break;
+        end
+
         k = k+1;
         grad(k,:) = grad_f(x(k), y(k));
 
